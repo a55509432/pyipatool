@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
 import argparse
 import getpass
+import sys
+import os
 
-
+# 直接使用绝对导入，因为当包被正确安装后，Python会自动将包的安装目录添加到sys.path中
 from pyipatool.api import API
 from pyipatool.models import AuthError
 
 def main():
     parser = argparse.ArgumentParser(description='ipatool - 用于从 iOS App Store 下载 ipa 文件的命令行工具')
+    
+    # 全局参数
+    parser.add_argument('--data-dir', help='数据目录路径（默认：包安装目录下的data文件夹）')
     
     subparsers = parser.add_subparsers(dest='command', help='可用命令')
     
@@ -50,7 +55,7 @@ def main():
 
     args = parser.parse_args()
     
-    api = API()
+    api = API(data_dir=args.data_dir)
     
     if args.command == 'auth':
         if args.auth_command == 'login':

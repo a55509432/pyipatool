@@ -1,8 +1,7 @@
-import json
-import os
 import platform
 import re
 import subprocess
+import os
 
 
 from pyipatool.cookie_jar import CookieJar
@@ -14,13 +13,24 @@ from pyipatool.models import Account
 
        
 class Auth:
-    def __init__(self, config_path=None):
+    def __init__(self, config_path=None, data_dir=None):
         # 使用ConfigManager管理配置
-        self.config_manager = ConfigManager(config_path)
+        self.config_manager = ConfigManager(config_path, data_dir)
         self.config = self.config_manager.config
         
-        # 不直接设置cookie_path，让CookieJar自己从配置中读取
-        self.cookie_jar = CookieJar()
+        # 计算cookies目录路径
+        try:
+            config_cookies_dir = self.config_manager.get("paths.cookies")
+            if config_cookies_dir:
+                cookies_dir = config_cookies_dir
+            else:
+                # 使用默认数据目录
+                cookies_dir = os.path.join(self.config_manager.data_dir, "cookies")
+            jar_path = os.path.join(cookies_dir, "cookies.txt")
+            self.cookie_jar = CookieJar(jar_path)
+        except Exception:
+            # 如果无法获取配置，让CookieJar使用默认路径
+            self.cookie_jar = CookieJar()
         self.http_client = HTTPClient(self.cookie_jar)
 
     def _load_config(self):

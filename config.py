@@ -4,21 +4,31 @@ import os
 class ConfigManager:
     """配置文件管理类"""
     
-    def __init__(self, config_path=None):
+    def __init__(self, config_path=None, data_dir=None):
         """
         初始化配置管理器
         
         Args:
             config_path: 配置文件路径，如果为None则使用默认路径
+            data_dir: 数据目录路径，如果为None则使用默认路径（包安装目录下的data）
         """
+        # 获取包安装目录（pyipatool目录）
+        package_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        if data_dir is None:
+            # 默认数据目录路径（包安装目录下的data）
+            self.data_dir = os.path.join(package_dir, "data")
+        else:
+            self.data_dir = data_dir
+        
         if config_path is None:
             # 默认配置文件路径
-            self.config_path = os.path.join("data", "config.json")
+            self.config_path = os.path.join(self.data_dir, "config.json")
         else:
             self.config_path = config_path
         
         # 确保data目录存在
-        os.makedirs("data", exist_ok=True)
+        os.makedirs(self.data_dir, exist_ok=True)
         
         # 生成配置文件示例
         self._generate_config_example()
@@ -28,7 +38,7 @@ class ConfigManager:
     
     def _generate_config_example(self):
         """生成配置文件示例"""
-        example_path = os.path.join("data", "config.json.example")
+        example_path = os.path.join(self.data_dir, "config.json.example")
         
         # 如果示例文件不存在，则生成
         if not os.path.exists(example_path):
@@ -39,8 +49,8 @@ class ConfigManager:
                     "store_front": "143443-2"
                 },
                 "paths": {
-                    "cookies": "data",
-                    "downloads": "data/downloads"
+                    "cookies": os.path.join(self.data_dir, "cookies").replace("\\", "/"),
+                    "downloads": os.path.join(self.data_dir, "downloads").replace("\\", "/")
                 },
                 "urls": {
                     "auth": "https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/authenticate",

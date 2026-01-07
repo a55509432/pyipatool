@@ -13,10 +13,6 @@
 ## 安装
 ### 通过 pip 安装
 ```bash
-# 从源码安装
-pip install -e .
-
-# 从 PyPI 安装
 pip install pyipatool
 ```
 
@@ -87,3 +83,4 @@ ipatool lookup -b com.tencent.xin
 ## 更新说明
 - **v1.0.0** (2026-01-07): 为 lookup、search、listversion、download 命令添加对于 5002 错误的重试机制
 - **v1.0.1** (2026-01-07): 发布pyipatool的pypi包
+- **V1.0.5** (2026-01-07): 修复路径依赖bug,默认配置文件在python安装包目录下

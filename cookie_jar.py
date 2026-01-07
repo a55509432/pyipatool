@@ -5,15 +5,19 @@ class CookieJar:
     def __init__(self, jar_path=None):
         if jar_path is None:
             # 默认cookies存储路径
-            cookies_dir = "data"
             try:
                 from pyipatool.config import ConfigManager
                 config = ConfigManager()
                 config_cookies_dir = config.get("paths.cookies")
                 if config_cookies_dir:
                     cookies_dir = config_cookies_dir
+                else:
+                    # 使用默认数据目录
+                    cookies_dir = os.path.join(config.data_dir, "cookies")
             except Exception:
-                pass
+                # 如果无法导入ConfigManager，使用基于当前文件的绝对路径
+                package_dir = os.path.dirname(os.path.abspath(__file__))
+                cookies_dir = os.path.join(package_dir, "data", "cookies")
             jar_path = os.path.join(cookies_dir, "cookies.txt")
         self.jar_path = jar_path
         

@@ -9,14 +9,15 @@ from .download import download
 from pyipatool.models import Account, SearchResult, LookupResult, ListVersionsResult
 
 class API:
-    def __init__(self, config_path=None):
+    def __init__(self, config_path=None, data_dir=None):
         """
         初始化API实例
         
         Args:
             config_path: 配置文件路径，默认为None，将使用默认路径
+            data_dir: 数据目录路径，默认为None，将使用包安装目录下的data
         """
-        self.auth = Auth(config_path)
+        self.auth = Auth(config_path, data_dir)
     
     def login(self, email: str, password: str, auth_code: str = "") -> Account:
         """
