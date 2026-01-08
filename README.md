@@ -84,3 +84,4 @@ ipatool lookup -b com.tencent.xin
 - **v1.0.0** (2026-01-07): 为 lookup、search、listversion、download 命令添加对于 5002 错误的重试机制
 - **v1.0.1** (2026-01-07): 发布pyipatool的pypi包
 - **V1.0.5** (2026-01-07): 修复路径依赖bug,默认配置文件在python安装包目录下
+- **V1.0.6** (2026-01-08): 更新支持import方式调用api

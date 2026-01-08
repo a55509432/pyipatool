@@ -1,3 +1,4 @@
+import os
 from pyipatool.models import App, AuthError
 
 def download(auth, app_id=None, bundle_id=None, output_path="", external_version_id=""):

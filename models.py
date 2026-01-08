@@ -49,6 +49,10 @@ class SearchResult:
     def __init__(self, count, results):
         self.count = count
         self.results = results
+    
+    def __iter__(self):
+        """支持直接迭代 SearchResult 对象"""
+        return iter(self.results)
 
 class LookupResult:
     """查询结果"""
