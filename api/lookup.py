@@ -77,8 +77,7 @@ def lookup(auth, bundle_id):
         id=item.get("trackId"),
         bundle_id=item.get("bundleId"),
         name=item.get("trackName"),
-        version=item.get("version"),
-        price=item.get("price")
+        version=item.get("version")
     )
 
     return LookupResult(app)

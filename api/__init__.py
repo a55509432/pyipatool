@@ -5,8 +5,9 @@ from .search import search
 from .lookup import lookup
 from .list_version import list_versions
 from .download import download
+from .get_version_metadata import get_version_metadata
 
-from pyipatool.models import Account, SearchResult, LookupResult, ListVersionsResult
+from pyipatool.models import Account, SearchResult, LookupResult, ListVersionsResult, App
 
 class API:
     def __init__(self, config_path=None, data_dir=None):
@@ -115,3 +116,20 @@ class API:
             AuthError: 未登录或参数错误时抛出
         """
         return download(self.auth, app_id, bundle_id, output_path, external_version_id)
+    
+    def get_version_metadata(self, app_id=None, bundle_id=None, external_version_id=None) -> App:
+        """
+        获取指定版本的应用元数据
+        
+        Args:
+            app_id: 应用ID，可选
+            bundle_id: 应用的bundle ID，可选
+            external_version_id: 外部版本ID，必须
+            
+        Returns:
+            App: 应用信息，包含版本元数据
+            
+        Raises:
+            AuthError: 未登录或参数错误时抛出
+        """
+        return get_version_metadata(self.auth, app_id, bundle_id, external_version_id)

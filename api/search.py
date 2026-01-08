@@ -56,8 +56,7 @@ def search(auth, term, limit=5):
                 id=item.get("trackId"),
                 bundle_id=item.get("bundleId"),
                 name=item.get("trackName"),
-                version=item.get("version"),
-                price=item.get("price")
+                version=item.get("version")
             )
             results.append(app)
             count += 1

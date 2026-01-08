@@ -2,12 +2,12 @@
 pyipatool - Apple App Store search and download tool
 """
 
-__version__ = "1.0.6"
+__version__ = "1.0.7"
 __author__ = "pjp"
 __email__ = "pjp385334338@gmail.com"
 
 from .api import API
-from .models import SearchResult, Account, LookupResult, ListVersionsResult, AuthError
+from .models import SearchResult, Account, LookupResult, ListVersionsResult, AuthError, App
 
 def login(email: str, password: str, auth_code: str = "") -> Account:
     """
@@ -112,6 +112,24 @@ def download(app_id=None, bundle_id=None, output_path="", external_version_id=""
     """
     api = API()
     return api.download(app_id, bundle_id, output_path, external_version_id)
+
+def get_version_metadata(app_id=None, bundle_id=None, external_version_id=None) -> App:
+    """
+    获取指定版本的应用元数据，方便其他Python项目直接引用
+    
+    Args:
+        app_id: 应用ID，可选
+        bundle_id: 应用的bundle ID，可选
+        external_version_id: 外部版本ID，必须
+        
+    Returns:
+        App: 应用信息，包含版本元数据
+        
+    Raises:
+        AuthError: 未登录或参数错误时抛出
+    """
+    api = API()
+    return api.get_version_metadata(app_id, bundle_id, external_version_id)
 
 # 导出API类，方便高级使用
 from .api import API as ApiClient

@@ -28,20 +28,18 @@ class Account:
 
 class App:
     """应用信息"""
-    def __init__(self, id=None, bundle_id=None, name=None, version=None, price=None):
+    def __init__(self, id=None, bundle_id=None, name=None, version=None):
         self.id = id
         self.bundle_id = bundle_id
         self.name = name
         self.version = version
-        self.price = price
 
     def to_dict(self):
         return {
             "id": self.id,
             "bundle_id": self.bundle_id,
             "name": self.name,
-            "version": self.version,
-            "price": self.price
+            "version": self.version
         }
 
 class SearchResult:

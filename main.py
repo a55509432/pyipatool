@@ -53,6 +53,12 @@ def main():
     lookup_parser = subparsers.add_parser('lookup', help='通过 Bundle ID 查询应用信息')
     lookup_parser.add_argument('-b', '--bundle-id', required=True, help='应用 Bundle ID')
 
+    # get-version-metadata 命令
+    get_version_metadata_parser = subparsers.add_parser('get-version-metadata', help='获取指定版本的应用元数据')
+    get_version_metadata_parser.add_argument('-i', '--app-id', help='应用 ID')
+    get_version_metadata_parser.add_argument('-b', '--bundle-id', help='应用 Bundle ID')
+    get_version_metadata_parser.add_argument('--version-id', required=True, help='特定版本的外部标识符')
+
     args = parser.parse_args()
     
     api = API(data_dir=args.data_dir)
@@ -155,6 +161,28 @@ def main():
             print(f"Bundle ID: {result.app.bundle_id}")
             print(f"App ID: {result.app.id}")
             print(f"Version: {result.app.version}")
+            print("-" * 80)
+        except AuthError as e:
+            print(f"Error: {str(e)}")
+        except Exception as e:
+            print(f"Unexpected error: {str(e)}")
+    elif args.command == 'get-version-metadata':
+        try:
+            if not args.app_id and not args.bundle_id:
+                print("Error: Either --app-id or --bundle-id must be specified")
+                get_version_metadata_parser.print_help()
+                return
+            
+            result = api.get_version_metadata(
+                app_id=args.app_id,
+                bundle_id=args.bundle_id,
+                external_version_id=args.version_id
+            )
+            print("Version metadata:")
+            print("-" * 80)
+            print(f"App ID: {result.id}")
+            print(f"Name: {result.name}")
+            print(f"Version: {result.version}")
             print("-" * 80)
         except AuthError as e:
             print(f"Error: {str(e)}")

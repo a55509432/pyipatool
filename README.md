@@ -85,3 +85,4 @@ ipatool lookup -b com.tencent.xin
 - **v1.0.1** (2026-01-07): 发布pyipatool的pypi包
 - **V1.0.5** (2026-01-07): 修复路径依赖bug,默认配置文件在python安装包目录下
 - **V1.0.6** (2026-01-08): 更新支持import方式调用api
+- **V1.0.7** (2026-01-08): 更新get-version-metadata接口用于反查list-versions查询结果的版本id
