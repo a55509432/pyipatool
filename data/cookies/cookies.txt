@@ -1,0 +1,10 @@
+# Requests Cookies
+X-Dsid=22516153076; domain=.apple.com; path=/; secure=True; httponly=False
+mz_at0_fr-22516153076=AwQAAAIBAABUxAAAAABp/BFzhtI8cT0rP6dlpNHU2SsqXN59x+s=; domain=.apple.com; path=/; secure=False; httponly=True
+mz_at0_fr=AwQAAAIBAABUxAAAAABp/BFzhtI8cT0rP6dlpNHU2SsqXN59x+s=; domain=.apple.com; path=/; secure=False; httponly=True
+mz_at_ssl-22516153076=AwUAAAIBAABUxAAAAABp/BFzM0vaQji5s/tOLq+LL9jtJy0lDw4=; domain=.apple.com; path=/; secure=True; httponly=True
+pldfltcid=051e98a266204a25b59521fc73d2430e073; domain=.apple.com; path=/; secure=False; httponly=False
+tv-pldfltcid=051e98a266204a25b59521fc73d2430e073; domain=.apple.com; path=/; secure=False; httponly=False
+itspod=73; domain=.apple.com; path=/; secure=False; httponly=False
+wosid-lite=CsuTorxO81fdbtwoeWKMLw; domain=.apple.com; path=/; secure=True; httponly=False
+hsaccnt=1; domain=.apple.com; path=/WebObjects; secure=False; httponly=False

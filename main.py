@@ -102,10 +102,10 @@ def main():
             result = api.search(args.term, args.limit)
             print(f"Search results for '{args.term}' (found {result.count} apps):")
             print("-" * 80)
-            print(f"{'ID':<15} {'Bundle ID':<40} {'Name':<30} {'Version':<10} {'Price':<10}")
+            print(f"{'ID':<15} {'Bundle ID':<40} {'Name':<30} {'Version':<10}")
             print("-" * 80)
             for app in result.results:
-                print(f"{app.id:<15} {app.bundle_id:<40} {app.name:<30} {app.version:<10} {app.price:<10}")
+                print(f"{app.id:<15} {app.bundle_id:<40} {app.name:<30} {app.version:<10}")
             print("-" * 80)
         except AuthError as e:
             print(f"Error: {str(e)}")

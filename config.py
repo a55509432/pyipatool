@@ -53,7 +53,6 @@ class ConfigManager:
                     "downloads": os.path.join(self.data_dir, "downloads").replace("\\", "/")
                 },
                 "urls": {
-                    "auth": "https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/authenticate",
                     "search": "https://itunes.apple.com/search",
                     "lookup": "https://itunes.apple.com/lookup",
                     "volume_store_download": "https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/volumeStoreDownloadProduct"
@@ -85,7 +84,6 @@ class ConfigManager:
                     # 确保URL配置存在
                     if "urls" not in config:
                         config["urls"] = {
-                            "auth": "https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/authenticate",
                             "search": "https://itunes.apple.com/search",
                             "lookup": "https://itunes.apple.com/lookup",
                             "volume_store_download": "https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/volumeStoreDownloadProduct"
@@ -95,7 +93,6 @@ class ConfigManager:
             except Exception as e:
                 pass
         return {"auth": {}, "urls": {
-            "auth": "https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/authenticate",
             "search": "https://itunes.apple.com/search",
             "lookup": "https://itunes.apple.com/lookup",
             "volume_store_download": "https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/volumeStoreDownloadProduct"

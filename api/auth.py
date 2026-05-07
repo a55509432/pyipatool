@@ -10,8 +10,12 @@ from pyipatool.config import ConfigManager
 
 from pyipatool.models import Account
 
+BAG_URL = "https://init.itunes.apple.com/bag.xml"
+FAILURE_TYPE_INVALID_CREDENTIALS = "-5000"
+CUSTOMER_MESSAGE_BAD_LOGIN = "MZFinance.BadLogin.Configurator_message"
+CUSTOMER_MESSAGE_ACCOUNT_DISABLED = "Your account is disabled."
 
-       
+
 class Auth:
     def __init__(self, config_path=None, data_dir=None):
         # 使用ConfigManager管理配置
@@ -67,26 +71,68 @@ class Auth:
         fixed_mac = "00:11:22:33:44:55"
         return fixed_mac
 
+    def bag(self) -> str:
+        """Fetch dynamic auth endpoint from Apple's bag service."""
+        mac_addr = self._get_mac_address()
+        guid = mac_addr.replace(":", "").replace("-", "").upper()
+
+        request = {
+            "method": "GET",
+            "url": f"{BAG_URL}?guid={guid}",
+            "headers": {
+                "Accept": "application/xml"
+            },
+            "response_format": "xml"
+        }
+
+        response = self.http_client.send(request)
+
+        if response["status_code"] != 200:
+            raise Exception(f"Failed to get bag: unexpected status code {response['status_code']}")
+
+        data = response.get("data") or {}
+        url_bag = data.get("urlBag", {})
+        auth_endpoint = url_bag.get("authenticateAccount", "")
+
+        if not auth_endpoint:
+            raise Exception("Failed to get auth endpoint from bag")
+
+        return auth_endpoint
+
     def login(self, email: str, password: str, auth_code: str = "") -> Account:
         mac_addr = self._get_mac_address()
-        # 移除所有分隔符（包括冒号和连字符）并转为大写
         guid = mac_addr.replace(":", "").replace("-", "").upper()
-        
-        account, err = self._login(email, password, auth_code, guid)
+
+        endpoint = self.bag()
+
+        account, err = self._login(email, password, auth_code, guid, endpoint)
         if err:
             raise err
-        
+
         return account
 
-    def _login(self, email, password, auth_code, guid):
+    def _login(self, email, password, auth_code, guid, endpoint):
+        redirect = ""
+        response = None
+        retry = True
 
-        attempt = 1
-        request = self._login_request(email, password, auth_code, guid, attempt)
-        response = self.http_client.send(request)
+        for attempt in range(1, 5):
+            if not retry:
+                break
+            url = redirect if redirect else endpoint
+            redirect = ""
+            request = self._login_request(email, password, auth_code, guid, url, attempt)
+            response = self.http_client.send(request)
+            retry, redirect, err = self._parse_login_response(response, attempt, auth_code)
+            if err:
+                return None, err
+
+        if retry:
+            return None, Exception("Too many login attempts")
 
         self.cookie_jar.save()
         data = response["data"]
-        store_front = response["headers"]["x-set-apple-store-front"]
+        store_front = response["headers"].get("x-set-apple-store-front", "")
 
         first_name = data.get("accountInfo", {}).get("address", {}).get("firstName", "")
         last_name = data.get("accountInfo", {}).get("address", {}).get("lastName", "")
@@ -104,12 +150,41 @@ class Auth:
         )
 
         self.config["auth"] = account.to_dict()
-        # 使用ConfigManager保存配置
         self.config_manager.set_auth_config(account.to_dict())
 
         return account, None
 
-    def _login_request(self, email, password, auth_code, guid, attempt):
+    def _parse_login_response(self, response, attempt, auth_code):
+        """Parse login response, return (retry, redirect_url, error)."""
+        status_code = response["status_code"]
+        data = response.get("data") or {}
+        headers = response.get("headers", {})
+
+        failure_type = data.get("failureType", "") if isinstance(data, dict) else ""
+        customer_message = data.get("customerMessage", "") if isinstance(data, dict) else ""
+        password_token = data.get("passwordToken", "") if isinstance(data, dict) else ""
+        ds_person_id = data.get("dsPersonId", "") if isinstance(data, dict) else ""
+
+        if status_code == 302:
+            redirect = headers.get("location", "")
+            if not redirect:
+                return False, "", Exception("Failed to retrieve redirect location")
+            return True, redirect, None
+        elif attempt == 1 and failure_type == FAILURE_TYPE_INVALID_CREDENTIALS:
+            return True, "", None
+        elif not failure_type and not auth_code and customer_message == CUSTOMER_MESSAGE_BAD_LOGIN:
+            return False, "", Exception("2FA code is required")
+        elif not failure_type and customer_message == CUSTOMER_MESSAGE_ACCOUNT_DISABLED:
+            return False, "", Exception("Account is disabled")
+        elif failure_type:
+            msg = customer_message if customer_message else "Something went wrong"
+            return False, "", Exception(msg)
+        elif status_code != 200 or not password_token or not ds_person_id:
+            return False, "", Exception("Something went wrong")
+
+        return False, "", None
+
+    def _login_request(self, email, password, auth_code, guid, endpoint, attempt):
         payload = {
             "appleId": email,
             "attempt": str(attempt),
@@ -121,7 +196,7 @@ class Auth:
 
         return {
             "method": "POST",
-            "url": self.config_manager.get("urls.auth"),
+            "url": endpoint,
             "headers": {
                 "Content-Type": "application/x-www-form-urlencoded"
             },

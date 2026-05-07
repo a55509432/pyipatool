@@ -1,0 +1,15 @@
+{
+  "auth": {
+    "email": "pxuz2200@hotmail.com",
+    "name": "Jejehe Jrjjrje",
+    "password_token": "AwIAAAIBAABUxAAAAABp/BFz5LKxaBbL7fhoXKVK9vHoqIwqK10=",
+    "directory_services_id": "22516153076",
+    "store_front": "143443-2,34",
+    "password": "Aa13579."
+  },
+  "urls": {
+    "search": "https://itunes.apple.com/search",
+    "lookup": "https://itunes.apple.com/lookup",
+    "volume_store_download": "https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/volumeStoreDownloadProduct"
+  }
+}

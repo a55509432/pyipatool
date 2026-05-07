@@ -9,7 +9,6 @@
     "downloads": "data/downloads"
   },
   "urls": {
-    "auth": "https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/authenticate",
     "search": "https://itunes.apple.com/search",
     "lookup": "https://itunes.apple.com/lookup",
     "volume_store_download": "https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/volumeStoreDownloadProduct"
