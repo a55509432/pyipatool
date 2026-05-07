@@ -1,4 +1,4 @@
-# ipatool
+# pyipatool
 苹果商店搜索下载历史版本工具
 
 > 参考 [majd/ipatool](https://github.com/majd/ipatool) 项目，使用 Python 重新实现。
@@ -35,49 +35,49 @@ cp data/config.json.example data/config.json
 
 #### 登录 Apple ID
 ```bash
-ipatool auth login -e your_email@example.com -p your_password
+pyipatool auth login -e your_email@example.com -p your_password
 ```
 
 #### 撤销凭证
 ```bash
-ipatool auth revoke
+pyipatool auth revoke
 ```
 
 #### 查看当前登录信息
 ```bash
-ipatool auth info
+pyipatool auth info
 ```
 
 ### 2. 搜索应用
 ```bash
-ipatool search "微信" --limit 10
+pyipatool search "微信" --limit 10
 ```
 
 ### 3. 列出应用版本
 通过 App ID 列出版本：
 ```bash
-ipatool list-versions -i 123456789
+pyipatool list-versions -i 123456789
 ```
 
 通过 Bundle ID 列出版本：
 ```bash
-ipatool list-versions -b com.tencent.xin
+pyipatool list-versions -b com.tencent.xin
 ```
 
 ### 4. 下载应用
 下载最新版本：
 ```bash
-ipatool download -b com.tencent.xin --output ./downloads
+pyipatool download -b com.tencent.xin --output ./downloads
 ```
 
 下载指定版本：
 ```bash
-ipatool download -b com.tencent.xin --version-id 123456789 --output ./downloads
+pyipatool download -b com.tencent.xin --version-id 123456789 --output ./downloads
 ```
 
 ### 5. 查询应用信息
 ```bash
-ipatool lookup -b com.tencent.xin
+pyipatool lookup -b com.tencent.xin
 ```
 
 ## 更新说明
@@ -86,3 +86,4 @@ ipatool lookup -b com.tencent.xin
 - **V1.0.5** (2026-01-07): 修复路径依赖bug,默认配置文件在python安装包目录下
 - **V1.0.6** (2026-01-08): 更新支持import方式调用api
 - **V1.0.7** (2026-01-08): 更新get-version-metadata接口用于反查list-versions查询结果的版本id
+- **V1.0.8** (2026-05-07): 改用 bag 接口动态获取认证端点，登录前先请求 init.itunes.apple.com/bag.xml 获取 authenticateAccount 地址，并增加最多4次重试逻辑（支持302重定向跟随及首次无效凭证重试）
